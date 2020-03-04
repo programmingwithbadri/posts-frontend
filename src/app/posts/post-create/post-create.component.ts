@@ -8,4 +8,8 @@ export class PostCreateComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {}
+
+  onAddPost() {
+    alert("Post Added");
+  }
 }
