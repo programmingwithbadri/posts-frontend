@@ -5,6 +5,7 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './post-list.component.html'
 })
 export class PostListComponent implements OnInit {
+  posts = [];
   constructor() { }
 
   ngOnInit(): void { }
