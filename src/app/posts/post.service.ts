@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Post } from "./post.model";
 import { Subject } from "rxjs";
 import { HttpClient } from "@angular/common/http";
+import { map } from "rxjs/operators";
 
 @Injectable({ providedIn: "root" })
 export class PostsService {
@@ -12,11 +13,20 @@ export class PostsService {
 
   getPosts() {
     this.http
-      .get<{ message: string; posts: Post[] }>(
-        "http://localhost:3000/api/posts"
+      .get<{ message: string; posts: any }>("http://localhost:3000/api/posts")
+      .pipe(
+        map((data) => {
+          return data.posts.map((post) => {
+            return {
+              id: post._id,
+              title: post.title,
+              content: post.content,
+            };
+          });
+        })
       )
-      .subscribe((data) => {
-        this.posts = data.posts;
+      .subscribe((posts) => {
+        this.posts = posts;
         this.PostsUpdated.next([...this.posts]);
       });
   }
