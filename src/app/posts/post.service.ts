@@ -7,7 +7,7 @@ import { map } from "rxjs/operators";
 @Injectable({ providedIn: "root" })
 export class PostsService {
   private posts: Post[] = [];
-  private PostsUpdated = new Subject<Post[]>();
+  private postsUpdated = new Subject<Post[]>();
 
   constructor(private http: HttpClient) {}
 
@@ -27,12 +27,13 @@ export class PostsService {
       )
       .subscribe((posts) => {
         this.posts = posts;
-        this.PostsUpdated.next([...this.posts]);
+        this.postsUpdated.next([...this.posts]);
+        console.log(this.posts);
       });
   }
 
   getPostUpdateListenter() {
-    return this.PostsUpdated.asObservable();
+    return this.postsUpdated.asObservable();
   }
 
   addPosts(title: string, content: string) {
@@ -42,10 +43,25 @@ export class PostsService {
       content,
     };
     this.http
-      .post<{ message: string }>("http://localhost:3000/api/posts", post)
-      .subscribe(() => {
+      .post<{ message: string; postId: string }>(
+        "http://localhost:3000/api/posts",
+        post
+      )
+      .subscribe((data) => {
+        const postId = data.postId;
+        post.id = postId;
         this.posts.push(post);
-        this.PostsUpdated.next([...this.posts]);
+        this.postsUpdated.next([...this.posts]);
+      });
+  }
+
+  deletePosts(postId: string) {
+    this.http
+      .delete<{ message: string }>(`http://localhost:3000/api/posts/${postId}`)
+      .subscribe(() => {
+        const updatedPosts = this.posts.filter((post) => post.id !== postId);
+        this.posts = updatedPosts;
+        this.postsUpdated.next([...this.posts]);
       });
   }
 }
