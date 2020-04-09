@@ -12,6 +12,7 @@ import { Post } from "../post.model";
 export class PostCreateComponent implements OnInit {
   private mode = "create";
   private postId: string;
+  isLoading = false;
   post: Post;
   constructor(
     public postsService: PostsService,
@@ -23,11 +24,13 @@ export class PostCreateComponent implements OnInit {
       if (paramMap.has("postId")) {
         this.mode = "edit";
         this.postId = paramMap.get("postId");
+        this.isLoading = true;
         this.postsService.getPost(this.postId).subscribe((data) => {
+          this.isLoading = false;
           this.post = {
             id: data.post._id,
             title: data.post.title,
-            content: data.post.content
+            content: data.post.content,
           };
         });
       } else {
@@ -39,6 +42,7 @@ export class PostCreateComponent implements OnInit {
 
   onSavePost(form: NgForm) {
     if (form.valid) {
+      this.isLoading = true;
       if (this.mode === "create") {
         this.postsService.addPosts(form.value.title, form.value.content);
         form.resetForm();
