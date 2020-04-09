@@ -15,6 +15,7 @@ export class PostCreateComponent implements OnInit {
   isLoading = false;
   post: Post;
   form: FormGroup;
+  imgPreview: string;
 
   constructor(
     public postsService: PostsService,
@@ -54,7 +55,13 @@ export class PostCreateComponent implements OnInit {
   onImagePicked(event: Event) {
     const file = (event.target as HTMLInputElement).files[0];
     this.form.patchValue({ image: file });
-    this.form.get('image').updateValueAndValidity();
+    this.form.get("image").updateValueAndValidity();
+    const reader = new FileReader();
+    reader.onload = () => {
+      // callback function since its async
+      this.imgPreview = reader.result as string;
+    };
+    reader.readAsDataURL(file);
   }
 
   onSavePost() {
