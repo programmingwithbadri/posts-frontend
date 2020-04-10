@@ -5,9 +5,9 @@
       {{ post.title }}
     </mat-expansion-panel-header>
     <div class="post-image">
-      <img [src]="post.imagePath" [alt]="post.title">
+      <img [src]="post.imagePath" [alt]="post.title" />
     </div>
-    {{ post.content }}
+    <p>{{ post.content }}</p>
     <mat-action-row>
       <a
         [routerLink]="['/edit', post.id]"
@@ -22,4 +22,6 @@
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
-<p class="mat-body-1" *ngIf="posts.length <= 0 && !isLoading">No posts added yet!</p>
+<p class="mat-body-1" *ngIf="posts.length <= 0 && !isLoading">
+  No posts added yet!
+</p>
