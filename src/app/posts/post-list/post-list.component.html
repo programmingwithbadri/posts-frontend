@@ -8,7 +8,7 @@
       <img [src]="post.imagePath" [alt]="post.title" />
     </div>
     <p>{{ post.content }}</p>
-    <mat-action-row *ngIf="userIsAuthenticated">
+    <mat-action-row *ngIf="userIsAuthenticated && userId === post.creator">
       <a
         [routerLink]="['/edit', post.id]"
         routerLinkActive="router-link-active"
@@ -26,7 +26,7 @@
   [length]="totalPosts"
   [pageSize]="postsPerPage"
   [pageSizeOptions]="pageSizeOptions"
-  (page) = "onChangedPage($event)"
+  (page)="onChangedPage($event)"
   *ngIf="posts.length > 0"
 ></mat-paginator>
 <p class="mat-body-1" *ngIf="posts.length <= 0 && !isLoading">
